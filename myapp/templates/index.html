@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}LEWs{% endblock %}
+
+{% block content %}
+        <h1>Learning English Words</h1>
+        <div class="container mt-3 mb-3" style="width: 100%; box-sizing: border-box; font-size: 22px;">
+                <p>
+                    Данное приложение поможет в пополнении словарного запаса Английских слов. Словарь можно корректировать и разделять на темы для целевого изучения определенных групп слов. Приложение работает в двух режимах.
+                </p>
+                <h3>Изучение слов и фраз</h3>
+                <ul>
+                    <li>Возможность добавлять слова и категории для классификации перевода.</li>
+                    <li>Инструменты для удобного запоминания и корректировки перевода при необходимости.</li>
+                </ul>
+                <h3>Проверка знаний</h3>
+                <ul>
+                    <li>Возможность выбора проверки: тест или точный ответ.</li>
+                    <li>Дополнительные параметры проверки.</li>
+                </ul>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex gap-2 w-25">
+                <a href="{{ url_for('words') }}" class="btn btn-primary" style="font-size: 20px; width: 100%;">Изучение слов</a>
+            </div>
+            <div class="d-flex gap-2 w-25">
+                <a href="{{ url_for('checkup') }}" class="btn btn-success" style="font-size: 20px; width: 100%;">Проверка знаний</a>
+            </div>
+        </div>
+
+{% endblock %}

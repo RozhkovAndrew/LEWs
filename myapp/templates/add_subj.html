@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Категории{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-5">
+        <form method="POST">
+            <div class="form-group">
+                <h4>Данные о категории (предметной области)</h4>
+                <input type="text" maxlength="50" id="subj_name" name="subj_name" style="width: 100%; box-sizing: border-box; font-size: 20px;" required placeholder="Введите название категории">
+
+                <textarea class="form-control mt-2 mb-2" maxlength="150" rows="3" style="resize: vertical; font-size: 18px;" id="subj_def" name="subj_def" placeholder="Описание категории (необязательно)"></textarea>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success" name="action" value="update">Добавить/Обновить категорию</button>
+                <button type="submit" class="btn btn-warning" name="action" value="delete">Удалить категорию</button>
+                </div>
+                <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary"  onclick="">Очистить форму</button>
+                <a href="{{ url_for('words') }}" class="btn btn-primary">К словарю</a>
+                </div>
+            </div>
+
+            <div>
+            <a> <big>Добавленные области (категории)</big></a>
+            <input type="text" id="filterInput" class="form-control mb-3" placeholder="Введите текст для поиска...">
+            <p id="noResults" class="text-muted mt-3" style="display: none;">Совпадений не найдено</p>
+            </div>
+            <ul class="list-group" id="list-tab" style="column-count: 3; column-gap: 20px;">
+                {%- for subject in subjects -%}
+                    <li class="list-group-item">
+                        <a href="#" class="link-primary text-decoration-none" data-name="{{ subject.subject_name }}" data-def="{{ subject.subject_def }}">
+                            {{ subject.subject_name }}
+                         </a>
+                    </li>
+                {%- else -%}
+                    <p>Нет предметных областей. Добавьте!</p>
+                {%- endfor -%}
+            </ul>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block page_scripts %}
+<!-- Автоматическое заполнение при клике на ссылку -->
+<script>
+    document.querySelectorAll('.list-group a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();  // отменяем переход по ссылке
+
+            // Заполняем поля из data-атрибутов
+            document.getElementById('subj_name').value = this.dataset.name || '';
+            document.getElementById('subj_def').value = this.dataset.def  || '';
+        });
+    });
+</script>
+
+   <!-- Скрипт на поиск нужного слова в списке  -->
+    <script>
+            const input = document.getElementById('filterInput');
+            const list = document.getElementById('list-tab');
+            const noResults = document.getElementById('noResults');
+            const items = Array.from(list.getElementsByTagName('li'));
+            function filterList() {
+            const searchText = input.value.toLowerCase().trim();
+            let hasVisible = false;
+
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchText)) {
+                    item.style.display = '';
+                    hasVisible = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            noResults.style.display = hasVisible ? 'none' : 'block';
+        }
+
+        input.addEventListener('input', filterList);
+    </script>
+ 
+ <!-- Сбросить фильтры и формы -->
+    <script>
+        function clear_filter() {
+            document.getElementById('filterInput').value=""
+            document.getElementById('subj_name').value=""
+            document.getElementById('subj_def').value=""
+
+            items.forEach(item => {
+                    item.style.display = '';
+                    hasVisible = true;});
+        }
+    </script>
+
+{% endblock %}

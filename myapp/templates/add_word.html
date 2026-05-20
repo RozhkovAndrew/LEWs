@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}Корректировка перевода{% endblock %}
+
+{% block content %}
+        <h4>Корректировка/добавление слова и перевода</h4>
+        <div class="form-container mt-2" style="font-size: 18px;">
+        <form method="POST">
+        {% for word in words %}   
+            <div class="form-group" id="fields-container">
+                <label for="e_word">Слово или фраза на английском языке</label>
+                <input type="hidden" id="id_word" name="id_word" value="{{ word.id}}">
+                <input type="text" id="e_word" maxlength="50" name="e_word" style="width: 100%; box-sizing: border-box; font-size: 22px;" required value="{{ word.e_word }}">
+                
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success submit-button" name="action" value="update_word">Обновить слово/перевод</button>
+                        <button type="submit" class="btn btn-warning submit-button" name="action" value="delete_word">Удалить слово</button>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('add_word') }}" class="btn btn-primary">Очистить форму</a>
+                    </div>
+                </div>
+        {% for translate in translates %}
+                <div class="row mb-2 d-flex align-items-center">
+                    <label for="subj_id" class="col-sm-2 col-form-label text-end"><strong>Категория перевода:</strong></label>
+                    <div class="col-10">
+                        <select name="subj_id" id="subj_id" class="form-select w-auto">
+                            <option value="{{ translate.subject_id }}">{{ translate.subject_name }}</option>
+                            {% for subject in subjects %}
+                            <option value="{{ subject.id}}">{{ subject.subject_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                  
+                <input type="hidden" id="id_translate" name="id_translate" value="{{ translate.id }}">
+                
+                <div class="row mb-2 d-flex align-items-center">
+                    <label for="translate_word" class="col-sm-2 col-form-label text-end"><strong>Перевод:</strong></label>
+                    <div class="col-10">
+                        <textarea id="translate_word" maxlength="80" class="form-control mt-2 mb-2" rows="1" style="resize: vertical; font-size: 20px;" name="translate_word" value="{{ translate.translate_word }}">{{ translate.translate_word }}</textarea>
+                    </div>
+                </div>
+                <div class="row mb-2 d-flex align-items-center">
+                    <label for="definition_en" class="col-sm-2 col-form-label text-end">Определение (англ):</label>
+                    <div class="col-10">
+                        <textarea id="definition_en" maxlength="220" class="form-control mt-2 mb-2" rows="1" style="resize: vertical;" name="definition_en" >{{ translate.definition_en }}</textarea>
+                    </div>
+                </div>
+                <div class="row mb-2 d-flex align-items-center">
+                    <label for="definition_ru" class="col-sm-2 col-form-label text-end">Определение (рус):</label>
+                    <div class="col-10">
+                        <textarea id="definition_ru" maxlength="220" class="form-control mt-2 mb-2" rows="1" style="resize: vertical;" name="definition_ru" >{{ translate.definition_ru }}</textarea>
+                    </div>
+                </div>
+                <hr style="height: 1px; background-color: black; border: none;">
+            </div>
+            
+        {% endfor %}
+        {% else %}
+            <div class="form-group" id="fields-container">
+                <input type="hidden" id="id_word" name="id_word" value="">
+                <label for="e_word">Слово или фраза на аглийском</label>
+                <input type="text" id="e_word" name="e_word" maxlength="50" style="width: 100%; box-sizing: border-box; font-size: 22px;" required placeholder="">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success submit-button" name="action" value="update_word">Добавить слово</button>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('add_word') }}" class="btn btn-primary">Очистить форму</a>
+                    </div>
+                </div>
+
+                <div class="row mb-2 d-flex align-items-center">
+                    <label for="subj_id" class="col-sm-2 col-form-label text-end"><strong>Категория перевода:</strong></label>
+                    <div class="col-10">
+                        <select name="subj_id" id="subj_id" class="form-select w-auto" required>
+                            <option value="">Выберите категорию</option>
+                            {% for subject in subjects %}
+                            <option value="{{ subject.id}}">{{ subject.subject_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <input type="hidden" id="id_translate" name="id_translate">
+                <div class="row mb-2 d-flex align-items-center">
+                    <label for="translate_word" class="col-sm-2 col-form-label text-end"><strong>Перевод:</strong></label>
+                    <div class="col-10">
+                        <textarea id="translate_word" maxlength="80" class="form-control mt-2 mb-2" rows="1" style="resize: vertical;" name="translate_word" required placeholder=""></textarea>
+                    </div>
+                </div>
+                <div class="row mb-2 d-flex align-items-center">
+                    <label for="definition_en" class="col-sm-2 col-form-label text-end">Определение (англ):</label>
+                    <div class="col-10">
+                        <textarea id="definition_en" maxlength="220" class="form-control mt-2 mb-2" rows="1" style="resize: vertical;" name="definition_en" placeholder=""></textarea>
+                    </div>
+                </div>
+                <div class="row mb-2 d-flex align-items-center">
+                    <label for="definition_ru" class="col-sm-2 col-form-label text-end">Определение (рус):</label>
+                    <div class="col-10">
+                        <textarea id="definition_ru" maxlength="220" class="form-control mt-2 mb-2" rows="1" style="resize: vertical;" name="definition_ru" placeholder=""></textarea>
+                    </div>
+                </div>
+                <hr style="height: 1px; background-color: black; border: none;">
+            </div>
+            
+            
+        {% endfor %}
+        <button  type="button" class="btn btn-light submit-button" onclick="addField()">➕ Добавить форму для перевода</button>
+        </form>
+        </div>
+
+{% endblock %}
+
+{% block page_scripts %}
+    <!-- Скрипт на дополнительные поля в форме -->
+    <script>
+    let counter = 1;
+
+    function addField() {
+        counter++;
+        const container = document.getElementById('fields-container');
+        const newField = document.createElement('div');
+        newField.innerHTML = `
+                <button type="button" class="btn btn-light w-40 ms-auto"  onclick="removeField(this)">❌ Удалить</button>
+                <div class="row mb-2 d-flex align-items-center">
+                    <label for="subj_id" class="col-sm-2 col-form-label text-end"><strong>Категория перевода:</strong></label>
+                    <div class="col-10">
+                        <select name="subj_id" id="subj_id" class="form-select w-auto" required>
+                            <option value="">Выберите роль</option>
+                            {% for subject in subjects %}
+                            <option value="{{ subject.id}}">{{ subject.subject_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <input type="hidden" id="id_translate" name="id_translate">
+                <div class="row mb-2 d-flex align-items-center">
+                    <label for="translate_word" class="col-sm-2 col-form-label text-end"><strong>Перевод:</strong></label>
+                    <div class="col-10">
+                        <textarea id="translate_word" class="form-control mt-2 mb-2" rows="1" style="resize: vertical;" name="translate_word" required placeholder=""></textarea>
+                    </div>
+                </div>
+                <div class="row mb-2 d-flex align-items-center">
+                    <label for="definition_en" class="col-sm-2 col-form-label text-end">Определение (англ):</label>
+                    <div class="col-10">
+                        <textarea id="definition_en" class="form-control mt-2 mb-2" rows="1" style="resize: vertical;" name="definition_en" placeholder=""></textarea>
+                    </div>
+                </div>
+                <div class="row mb-2 d-flex align-items-center">
+                    <label for="definition_ru" class="col-sm-2 col-form-label text-end">Определение (рус):</label>
+                    <div class="col-10">
+                        <textarea id="definition_ru" class="form-control mt-2 mb-2" rows="1" style="resize: vertical;" name="definition_ru" placeholder=""></textarea>
+                    </div>
+                </div>
+                <hr style="height: 1px; background-color: black; border: none;">
+            </div>
+               
+        `;
+        container.appendChild(newField);
+    }
+
+    function removeField(btn) {
+        btn.parentElement.remove();
+    }
+    </script>
+
+{% endblock %}

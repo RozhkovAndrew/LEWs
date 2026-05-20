@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+
+{% block title %}Словарь{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-2">
+        <h1>Словарь</h1>
+        <!-- Элементы управления и фильтры -->
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex gap-2">
+            <select class="form-select w-auto" name="subj_id" id="subj_id">
+            <option value="0">Все категории</option>
+                {%- for subject in subjects -%}
+                    <option value="{{ subject.id}}">{{ subject.id}} - {{ subject.subject_name }}</option>
+                {%- endfor -%}
+            </select>
+            <a class="btn btn-primary" onclick="clear_filter()" role="button">Сбросить фильтр</a>
+            </div>
+        
+        <div class="d-flex gap-2">
+            <a class="btn btn-primary w-auto" href="{{ url_for('add_word') }}" role="button">Добавить слово</a>
+            <a class="btn btn-primary w-auto" href="{{ url_for('add_subj') }}" role="button">Добавить предметную область</a>
+        </div>
+        </div>
+        <input type="text" id="filterInput" class="form-control mb-3" placeholder="Введите текст для поиска...">
+    </div>
+    <p id="noResults" class="text-muted mt-3" style="display: none;">Совпадений не найдено</p>
+
+    <div class="row">
+        <div class="col-4">
+            <!-- Список слов в столбике -->
+            <div class="list-group" id="list-tab" role="tablist">
+                {% for word in words %}
+                    <a class="list-group-item list-group-item-action" data-id="{{ word.id }}" data-bs-toggle="list" href="#{{ word.e_word }}" role="tab"><big>{{ word.e_word }}</big>
+                    {% for subject_id in word.subject_list_id %}
+                            <span class="badge text-bg-warning rounded-pill">{{ subject_id }}</span>
+                    {% endfor %} </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="d-flex justify-content-between mt-0">
+                <button id="prevTab" class="btn btn-outline-primary">← Предыдущая</button>
+                <button id="nextTab" class="btn btn-outline-primary">Следующая →</button>
+            </div>
+            <!-- Карточка выбранного в столбце слова -->
+            <div class="tab-content" id="nav-tabContent">
+                {% for word in words %}
+                <div class="tab-pane" id="{{ word.e_word }}" role="tabpanel" aria-labelledby="list-{{ word.e_word }}-list">
+                    <div class="card">
+                        <div class="card-header text-bg-light">
+                            <h3>{{ word.e_word }}</h3>   
+                        </div>
+                        <div class="card-body card-body-compact" style="min-height: 400px; font-family: monospace; background-color: rgb(248, 241, 248);">
+                            {%- for i in range(word.subject_list|length) -%}
+                            <div><mark><i>{{ word.subject_list[i] }}</i></mark></div><div><strong><big>{{ word.translate_list[i]}}</big></strong></div>
+
+                            {%- if word.definition_en_list[i] -%}
+                            <div><em><u>Определение (англ)</u>: </em>{{ word.definition_en_list[i]}}</div><hr style="width:30%; text-align:left; border:none; border-top:1px dashed black;"><div><em><u>Определение</u>: </em>{{ word.definition_ru_list[i]}}</div>
+                            {%- endif -%}
+                            <hr style="height: 1px; background-color: black; border: none;">
+                            {%- endfor -%}
+                        </div>
+                        <!-- Кнопки управления в карточке -->
+                         <div class="d-flex justify-content-center mt-0" style="background-color: rgb(248, 241, 248);">   
+                            <a href="{{ url_for('add_word', id=word.id) }}" class="btn btn-success">Корректировка слова</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>  
+    </div>
+{% endblock %}
+
+{% block page_scripts %}
+    <!-- переработанный скрипт на переключение - вроде доработал -->
+    <script>
+    // 1. Найти ВСЕ триггеры табов
+    const allTriggers = document.querySelectorAll('#list-tab .list-group-item');
+    // 2. Отфильтровать только видимые
+    const visibleTriggers = Array.from(allTriggers).filter(trigger => {
+        const style = window.getComputedStyle(trigger);
+        return style.display !== 'none' && style.visibility !== 'hidden';
+    });
+    
+    // 3. Создать массив объектов Tab для видимых
+    let tabs = [];
+    let currentTab = 0;
+    
+    visibleTriggers.forEach((trigger, idx) => {
+        const tab = new bootstrap.Tab(trigger);
+        tabs.push({
+            tab: tab,
+            element: trigger,
+            index: idx
+        });
+        
+        // Клик по триггеру синхронизирует currentTab
+        trigger.addEventListener('click', (event) => {
+            event.preventDefault();
+            const clickedIndex = tabs.findIndex(t => t.element === trigger);
+            if (clickedIndex !== -1) {
+                currentTab = clickedIndex;
+            }
+        });
+    });
+
+    // 4. Кнопки prev/next
+    const prevBtn = document.getElementById('prevTab');
+    const nextBtn = document.getElementById('nextTab');
+
+    // 5. Обработчики кнопок
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            const current = getActiveTabIndex();
+            activateTabVis(current-1);
+        });
+    }
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            const current = getActiveTabIndex();
+            activateTabVis(current +1);
+        });
+    }
+    
+    function activateTabVis(index) {
+        const visibleTabs = getVisibleTabs();
+        if (index >= 0 && index < visibleTabs.length) {
+            new bootstrap.Tab(visibleTabs[index]).show();
+            currentTab = index;
+        }
+    }
+    
+    // Активация первого таба при загрузке страницы или таба со словом после корректировки
+    activateTabByOriginalIndex(0);
+    if (tabs.length > 0) {
+        const tabId = '{{ id_word }}';
+        if (tabId) {
+            activateTabByOriginalIndex(tabId);
+        }
+    }
+
+    // Важнейшая вещь для поиска активных индексов табов
+    function getActiveTabIndex() {
+    const triggers = document.querySelectorAll('#list-tab .list-group-item');
+    const visibleTriggers = Array.from(allTriggers).filter(trigger => {
+        const style = window.getComputedStyle(trigger);
+        return style.display !== 'none' && style.visibility !== 'hidden';
+    });
+    let activeIndex = -1;
+    
+    visibleTriggers.forEach((trigger, idx) => {
+        if (trigger.classList.contains('active')) {
+            activeIndex = idx;
+        }
+    });
+        return activeIndex;
+    }
+
+    // Функция: получить видимые табы
+    const getVisibleTabs = () => {
+        const all = document.querySelectorAll('#list-tab .list-group-item');
+        return Array.from(all).filter(el => {
+            const s = window.getComputedStyle(el);
+            return s.display !== 'none' && s.visibility !== 'hidden';
+        });
+    };
+
+
+    //!!!!!!Функция для нахождения видимых табов по ID переданного таба
+    function activateTabByOriginalIndex(targetOriginalId) {
+    // 1. Получить все триггеры табов
+    const allTriggers = document.querySelectorAll('#list-tab .list-group-item');
+    let targetTrigger = null;
+    let activeIndex = -1;
+    
+    // 2. Отфильтровать только видимые
+    const visibleTriggers = Array.from(allTriggers).filter(trigger => {
+        const style = window.getComputedStyle(trigger);
+        return style.display !== 'none' && style.visibility !== 'hidden';
+    });
+
+    // 3. Найти триггер с нужным data-id среди видимых
+    if (typeof targetOriginalId === 'number') {
+        targetTrigger = visibleTriggers[targetOriginalId];
+    }
+    else if (typeof targetOriginalId === 'string') {
+        targetTrigger = visibleTriggers.find(trigger => 
+        trigger.getAttribute('data-id') === targetOriginalId
+    );
+    }
+    
+    // 4. Если найден — показать таб
+    if (targetTrigger) {
+        const tab = new bootstrap.Tab(targetTrigger);
+        tab.show();
+    }
+}
+
+    </script>
+
+   <!-- Скрипт на поиск нужного слова в списке  -->
+    <script>
+            const input = document.getElementById('filterInput');
+            const list = document.getElementById('list-tab');
+            const noResults = document.getElementById('noResults');
+            const items = Array.from(list.getElementsByTagName('a'));
+            
+            function filterList() {
+            const searchText = input.value.toLowerCase().trim();
+            let hasVisible = false;
+
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchText)) {
+                    item.style.display = '';
+                    hasVisible = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            noResults.style.display = hasVisible ? 'none' : 'block';
+            activateTabByOriginalIndex(0);
+        }
+
+        input.addEventListener('input', filterList);
+    </script>
+
+    <!-- Скрипт на поиск выбранной категории в списке  -->
+    <script>
+        const s_input = document.getElementById('subj_id');
+        const s_items = Array.from(list.getElementsByTagName('span'));
+        
+        function s_filterList() {
+        const s_searchText = s_input.value.toLowerCase().trim();
+        let hasVisible = false;
+        if (s_searchText !="0") {
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(s_searchText))  {
+                    item.style.display = '';
+                    hasVisible = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        } else {
+            items.forEach(item => {
+                    item.style.display = '';
+                    hasVisible = true;});
+        }     
+            noResults.style.display = hasVisible ? 'none' : 'block';
+            activateTabByOriginalIndex(0);
+        }
+
+        s_input.addEventListener('change', s_filterList);
+    </script>
+
+    <!-- Сбросить фильтры -->
+    <script>
+        function clear_filter() {
+            document.getElementById('filterInput').value=""
+            document.getElementById('subj_id').value="0"
+            items.forEach(item => {
+                    item.style.display = '';
+                    hasVisible = true;});
+        }
+    </script>
+
+{% endblock %}

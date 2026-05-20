@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Проверка{% endblock %}
+
+{% block content %}
+<!-- Кастомное модальное окно -->
+<div class="modal fade" id="customAlert" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Результаты проверки</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="alertMessage">
+                Будет заменено
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+        <div class="col-md-6">
+            <!-- Карточка вопроса-->
+                <div id="cardsContainer">
+                {%- for question in test -%}
+                <div class="card card-item">
+                        <div class="card-header text-bg-light">
+                            <h3>Вопрос №{{ loop.index }} из {{test|length}}</h3> 
+                        </div>
+                        <div class="card-body card-body-compact" id="{{ question.e_word }}" style="min-height: 400px; font-family: monospace; background-color: rgb(248, 241, 248);">
+                            <div><i>Запишите английский аналог для данных выражений:</i></div><div><strong><big>{{ question.translate_word}}</big></strong></div>
+                            <hr style="height: 1px; background-color: black; border: none;">
+                            <input type="text" data-field="q{{ loop.index }}" data-expected="{{ question.e_word }}" class="question-input" placeholder="Введите ответ">
+                            <div class="error-message" data-error-for="q{{ loop.index }}"></div>
+                        </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>  
+    </div>
+    <!-- Кнопки управления в карточке -->
+{% set url = url_for('checkup') %}
+<div class="row justify-content-center">
+    <div class="col-md-6 align-items-center">
+    <div class="d-flex justify-content-between mt-0" style="background-color: rgb(248, 241, 248);">
+        <div class="d-flex gap-2">
+            <button id="startBtn" class="btn btn-outline-secondary">В начало</button>
+            <button id="prevBtn" class="btn btn-outline-secondary">  ←  </button>
+        </div>
+        <div class="d-flex gap-2">
+            <button id="resBtn" class="btn btn-outline-primary">Проверить ответы</button>
+            <button id="newBtn" class="btn btn-outline-primary" onclick="location.href='{{ url }}'">Новая проверка</button>
+        </div>
+        <div class="d-flex gap-2">
+            <button id="nextBtn" class="btn btn-outline-secondary">  →  </button>
+            <button id="endBtn" class="btn btn-outline-secondary">В конец</button>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+        const cards = document.querySelectorAll('.card-item');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const resBtn = document.getElementById('resBtn');
+        const startBtn = document.getElementById('startBtn');
+        const endBtn = document.getElementById('endBtn');
+        const newBtn = document.getElementById('newBtn');
+
+        let currentIndex = 0;
+        //resBtn.disabled = true;
+        resBtn.hidden = true;
+        newBtn.hidden = true;
+
+        function showCard(index) {
+            // Скрываем все карточки
+            cards.forEach((card, i) => {
+                card.classList.add('d-none');
+            });
+            // Показываем текущую
+            cards[index].classList.remove('d-none');
+            
+            // Обновляем состояние кнопок
+            prevBtn.disabled = index === 0;
+            startBtn.disabled = index === 0;
+            nextBtn.disabled = index === cards.length - 1;
+            endBtn.disabled = index === cards.length - 1;
+            if (newBtn.hidden === true) {
+                resBtn.hidden = index !== cards.length - 1;
+            }   
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                showCard(currentIndex);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < cards.length - 1) {
+                currentIndex++;
+                showCard(currentIndex);
+            }
+        });
+
+        endBtn.addEventListener('click', () => {
+            if (currentIndex < cards.length - 1) {
+                currentIndex = cards.length - 1
+                showCard(currentIndex);
+            }
+        });
+
+        startBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex = 0
+                showCard(currentIndex);
+            }
+        });
+
+        showCard(currentIndex);
+
+
+</script>
+
+<script>
+    let correctAnswers = 0;
+    function validateCard(cardElement) {   
+        // Проверка текстовых полей
+        const inputs = cardElement.querySelectorAll('.question-input');
+        inputs.forEach(input => {
+            const expected = input.getAttribute('data-expected').toLowerCase();
+            const fieldName = input.getAttribute('data-field');
+            const errorDiv = cardElement.querySelector(`.error-message[data-error-for="${fieldName}"]`);
+            const userValue = input.value.toLowerCase().trim();
+            
+            if (userValue !== expected) {
+
+                if (errorDiv) errorDiv.textContent = `Правильный ответ "${expected}"`;
+                input.style.borderColor = 'red';
+            } else {
+                if (errorDiv) errorDiv.textContent = 'Верно!';
+                correctAnswers++;
+                input.style.borderColor = '#ccc';
+            }
+        });
+    }
+
+    function validateAllCards() {
+        //const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            validateCard(card);
+        });
+    }
+
+    resBtn.addEventListener('click', () => {
+        validateAllCards();
+        resBtn.disabled = true;
+        resBtn.hidden = true;
+        newBtn.hidden = false;
+        showCustomAlert(correctAnswers,cards.length);
+    });
+
+    function showCustomAlert(corAns, allAns) {
+        document.getElementById('alertMessage').textContent = corAns +' из '+allAns+ " верно!";
+        const modal = new bootstrap.Modal(document.getElementById('customAlert'));
+        modal.show();
+    }
+</script>
+{% endblock %}

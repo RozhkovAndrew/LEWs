@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Проверка{% endblock %}
+
+{% block content %}
+{% if result %}
+    <div></div>
+{% else %}
+<h1>Проверка знаний</h1>
+<div class="container mt-3">
+    <form method="POST">
+        <div class="row mb-2 d-flex align-items-center">
+            <label for="subj_id" class="col-sm-3 col-form-label text-end"><strong>Категория для проверки:</strong></label>
+            <div class="col-9">
+                <select name="subj_id" id="subj_id" class="form-select w-auto">
+                        {% for subject in subjects %}
+                    <option data-max="{{ subject.count_translate }}" value="{{ subject.subject_id}}">{{ subject.subject_name }} [{{ subject.count_translate }}]</option>
+                        {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row mb-2 d-flex align-items-center">
+            <label for="checkVar" class="col-sm-3 col-form-label text-end"><strong>Тип проверки:</strong></label>
+            <div class="col-9">
+                <select name="checkVar" id="checkVar" class="form-select w-auto">
+                    <option value="1">Точный ответ</option>
+                    <option value="2">Тестирование</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mb-2 d-flex align-items-center">
+            <label for="checkVar" class="col-sm-3 col-form-label text-end"><strong>Количество вопросов:</strong></label>
+            <div class="col-9">
+                <input type="number" id="numQuest" maxlength="4" name="numQuest" style="width: 30%; box-sizing: border-box; font-size: 20px;" required placeholder="">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success" name="test" value="test">Перейти к проверке</button>
+    </form>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block page_scripts %}
+<!-- Скрипт на проверку максимального и минамального значения на кол-во вопросов -->
+<script>
+    function setupNumberField(inputElement, maxValue) {
+    const input = inputElement;
+    const min = 1;
+    const max = maxValue;
+    
+    input.addEventListener('blur', function() {
+        let val = parseInt(this.value);
+        if (isNaN(val)) {
+            this.value = '';
+        } else if (val < min) {
+            this.value = min;
+            // alert(`Минимальное значение: ${min}`);
+        } else if (val > max) {
+            this.value = max;
+            // alert(`Максимальное значение: ${max}`);
+        }
+    });
+    
+    input.addEventListener('keypress', function(e) {
+        if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
+            e.preventDefault();
+            }
+        });
+    }
+
+    function setLimitInput() {
+        const selected = inputSelect.options[inputSelect.selectedIndex];
+        const maxSub = selected.getAttribute('data-max');
+        setupNumberField(numField, maxSub);
+    }
+    
+    const numField = document.getElementById('numQuest');
+    const inputSelect = document.getElementById('subj_id');
+    setLimitInput();
+    inputSelect.addEventListener('change', setLimitInput);
+
+</script>
+
+{% endblock %}

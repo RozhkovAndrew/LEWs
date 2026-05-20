@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Мой сайт{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <!-- Для подвала -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            padding-bottom: 100px;  /* Отступ под footer */
+        }
+        
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #1a1a2e;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            z-index: 1000;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ШАПКА (НАВИГАЦИЯ) -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('words') }}">Мой словарик</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Главная</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('words') }}">Словарь</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('checkup') }}">Проверка знаний</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+
+    <!-- ОСНОВНОЙ КОНТЕНТ (меняется на каждой странице) -->
+    <main class="container my-3">
+        <!-- Блок для flash-сообщений -->
+        {%- with messages = get_flashed_messages(with_categories=true) -%}
+            {%- if messages -%}
+                {%- for category, message in messages -%}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {%- endfor -%}
+            {%- endif -%}
+        {%- endwith -%}
+
+        {% block content %}
+        <h1>Добро пожаловать!</h1>
+        <p>Это содержимое по умолчанию. Переопределите блок content в дочерних шаблонах.</p>
+        {% endblock %}
+        <div class="container">
+        
+    </main>
+
+    <!-- ПОДВАЛ (FOOTER) -->
+    <footer class="bg-light text-center text-muted py-3 mt-5">
+        <div class="container">
+            <span>&copy; 2026 Мой словарик. Права не защищены.</span>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS (для модалок, тултипов и т.д.) -->
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    {% block page_scripts %}{% endblock %}
+</body>
+</html>
