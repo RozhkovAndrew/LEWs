@@ -11,12 +11,13 @@ git clone https://github.com/RozhkovAndrew/LEWs
 cd LEWs
 pip install -r requirements.txt
 python main.py
+```
 
 ## Технологии
-•	Python 3.12
-•	Flask
-•	SQLAlchemy
-• Bootstrap
+  •	Python 3.12
+  •	Flask
+  •	SQLAlchemy
+  • Bootstrap
 
 
 ## Автор
