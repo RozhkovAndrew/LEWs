@@ -31,6 +31,26 @@
         .content {
             padding: 20px;
         }
+        /* Улучшение touch-области для мобильных */
+        button, 
+        .btn,
+        .nav-link,
+        .list-group-item {
+            touch-action: manipulation;
+        }
+        
+        /* Увеличение отступов на мобильных */
+        @media (max-width: 768px) {
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+        }
+
     </style>
 </head>
 
