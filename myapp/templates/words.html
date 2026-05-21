@@ -9,13 +9,20 @@
         <!-- Элементы управления и фильтры -->
         <div class="d-flex justify-content-between align-items-center">
             <div class="d-flex gap-2">
-            <select class="form-select w-auto" name="subj_id" id="subj_id">
+            <select class="form-select w-auto d-none d-md-inline" name="subj_id" id="subj_id">
             <option value="0">Все категории</option>
                 {%- for subject in subjects -%}
                     <option value="{{ subject.id}}">{{ subject.id}} - {{ subject.subject_name }}</option>
                 {%- endfor -%}
             </select>
-            <a class="btn btn-primary" onclick="clear_filter()" role="button">Сбросить фильтр</a>
+            <select class="form-select w-auto d-inline d-md-none" name="subj_id" id="subj_id">
+            <option value="0">Все категории</option>
+                {%- for subject in subjects -%}
+                    <option value="{{ subject.id}}">{{ subject.subject_name }}</option>
+                {%- endfor -%}
+            </select>
+            <a class="btn btn-primary d-none d-md-inline" onclick="clear_filter()" role="button">Сбросить фильтр</a>
+            <a class="btn btn-primary d-inline d-md-none" onclick="clear_filter()" role="button">❌ фильтр</a>
             </div>
         
         <div class="d-flex gap-2">
