@@ -9,7 +9,7 @@ import git
 @app.route('/update_server_gh', methods=['POST'])
 def webhook():
     if request.method == 'POST':
-        repo = git.Repo('/')
+        repo = git.Repo('LEWs')
         origin = repo.remotes.origin
         origin.pull()
         return 'Updated PythonAnywhere successfully', 200
