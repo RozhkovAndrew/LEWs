@@ -37,15 +37,15 @@
                 {% for word in words %}
                     <a class="list-group-item list-group-item-action" data-id="{{ word.id }}" data-bs-toggle="list" href="#{{ word.e_word }}" role="tab"><big>{{ word.e_word }}</big>
                     {% for subject_id in word.subject_list_id %}
-                            <span class="badge text-bg-warning rounded-pill">{{ subject_id }}</span>
+                            <span class="badge text-bg-warning rounded-pill d-none d-md-inline">{{ subject_id }}</span>
                     {% endfor %} </a>
                 {% endfor %}
             </div>
         </div>
         <div class="col-8">
             <div class="d-flex justify-content-between mt-0">
-                <button id="prevTab" class="btn btn-outline-primary">← Предыдущая</button>
-                <button id="nextTab" class="btn btn-outline-primary">Следующая →</button>
+                <button id="prevTab" class="btn btn-outline-primary">≺ Предыдущее</button>
+                <button id="nextTab" class="btn btn-outline-primary">Следующее ≻</button>
             </div>
             <!-- Карточка выбранного в столбце слова -->
             <div class="tab-content" id="nav-tabContent">
