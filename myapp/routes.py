@@ -3,6 +3,18 @@ from flask import render_template, redirect, url_for, request, session, flash
 from sqlalchemy import func
 from myapp.models import db, SubjectArea, EWord, Translation
 import random
+import git
+
+#Webhook на обновление репозитория
+@app.route('/update_server_gh', methods=['POST'])
+def webhook():
+    if request.method == 'POST':
+        repo = git.Repo('LEWs')
+        origin = repo.remotes.origin
+        origin.pull()
+        return 'Updated PythonAnywhere successfully', 200
+    else:
+        return 'Wrong event type', 400 
 
 #Главная страница с приветствием
 @app.route('/')
