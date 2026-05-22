@@ -6,11 +6,12 @@
 {% if result %}
     <div></div>
 {% else %}
-<h1>Проверка знаний</h1>
+<h1 class="d-none d-md-inline">Проверка знаний</h1>
 <div class="container mt-3">
     <form method="POST">
         <div class="row mb-2 d-flex align-items-center">
-            <label for="subj_id" class="col-sm-3 col-form-label text-end"><strong>Категория для проверки:</strong></label>
+            <label for="subj_id" class="col-sm-3 col-form-label text-end d-none d-md-inline"><strong>Категория для проверки:</strong></label>
+            <label for="subj_id" class="col-sm-3 col-form-label text-end d-inline d-md-none"><strong>Категория:</strong></label>
             <div class="col-9">
                 <select name="subj_id" id="subj_id" class="form-select w-auto">
                         {% for subject in subjects %}
@@ -20,7 +21,8 @@
             </div>
         </div>
         <div class="row mb-2 d-flex align-items-center">
-            <label for="checkVar" class="col-sm-3 col-form-label text-end"><strong>Тип проверки:</strong></label>
+            <label for="checkVar" class="col-sm-3 col-form-label text-end d-none d-md-inline"><strong>Тип проверки:</strong></label>
+            <label for="checkVar" class="col-sm-3 col-form-label text-end d-inline d-md-none"><strong>Тип:</strong></label>
             <div class="col-9">
                 <select name="checkVar" id="checkVar" class="form-select w-auto">
                     <option value="1">Точный ответ</option>
@@ -29,7 +31,8 @@
             </div>
         </div>
         <div class="row mb-2 d-flex align-items-center">
-            <label for="checkVar" class="col-sm-3 col-form-label text-end"><strong>Количество вопросов:</strong></label>
+            <label for="checkVar" class="col-sm-3 col-form-label text-end d-none d-md-inline"><strong>Количество вопросов:</strong></label>
+            <label for="checkVar" class="col-sm-3 col-form-label text-end d-inline d-md-none"><strong>Количество:</strong></label>
             <div class="col-9">
                 <input type="number" id="numQuest" maxlength="4" name="numQuest" style="width: 30%; box-sizing: border-box; font-size: 20px;" required placeholder="">
             </div>
