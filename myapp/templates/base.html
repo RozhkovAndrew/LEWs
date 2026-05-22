@@ -10,6 +10,7 @@
         * {
             margin: 0;
             padding: 0;
+            font-size: 15px;
         }
         
         body {
@@ -52,9 +53,13 @@
         
         /* Увеличение отступов на мобильных - max-width: 768px */
         @media (min-width: 768px) {
+            * {
+                font-size: 19px;
+            }
             .container { 
                 padding-left: 15px;
                 padding-right: 15px;
+                font-size: 18px !important;
             }
             
             .card-body {

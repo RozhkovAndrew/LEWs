@@ -3,7 +3,7 @@
 {% block title %}Корректировка перевода{% endblock %}
 
 {% block content %}
-        <h4>Корректировка/добавление слова и перевода</h4>
+        <h4 class="d-none d-md-inline">Корректировка/добавление слова и перевода</h4>
         <div class="form-container mt-2" style="font-size: 18px;">
         <form method="POST">
         {% for word in words %}   
@@ -14,16 +14,20 @@
                 
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-success submit-button" name="action" value="update_word">Обновить слово/перевод</button>
-                        <button type="submit" class="btn btn-warning submit-button" name="action" value="delete_word">Удалить слово</button>
+                        <button type="submit" class="btn btn-success submit-button d-none d-md-inline" name="action" value="update_word">Обновить слово/перевод</button>
+                        <button type="submit" class="btn btn-outline-success submit-button d-inline d-md-none" name="action" value="update_word">Обновить слово</button>
+                        <button type="submit" class="btn btn-warning submit-button d-none d-md-inline" name="action" value="delete_word">Удалить слово</button>
+                        <button type="submit" class="btn btn-outline-primary submit-button d-inline d-md-none" name="action" value="delete_word">➖ слово</button>
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="{{ url_for('add_word') }}" class="btn btn-primary">Очистить форму</a>
+                        <a href="{{ url_for('add_word') }}" class="btn btn-primary d-none d-md-inline">Очистить форму</a>
+                        <a href="{{ url_for('add_word') }}" class="btn btn-outline-primary d-inline d-md-none">Очистить форму</a>
                     </div>
                 </div>
         {% for translate in translates %}
                 <div class="row mb-2 d-flex align-items-center">
-                    <label for="subj_id" class="col-sm-2 col-form-label text-end"><strong>Категория перевода:</strong></label>
+                    <label for="subj_id" class="col-sm-2 col-form-label text-end d-none d-md-inline"><strong>Категория перевода:</strong></label>
+                    <label for="subj_id" class="col-sm-2 col-form-label text-end d-inline d-md-none">Категория</label>
                     <div class="col-10">
                         <select name="subj_id" id="subj_id" class="form-select w-auto">
                             <option value="{{ translate.subject_id }}">{{ translate.subject_name }}</option>
@@ -43,13 +47,15 @@
                     </div>
                 </div>
                 <div class="row mb-2 d-flex align-items-center">
-                    <label for="definition_en" class="col-sm-2 col-form-label text-end">Определение (англ):</label>
+                    <label for="definition_en" class="col-sm-2 col-form-label text-end d-none d-md-inline">Определение (англ):</label>
+                    <label for="definition_en" class="col-sm-2 col-form-label text-end d-inline d-md-none">Опр(анг):</label>
                     <div class="col-10">
                         <textarea id="definition_en" maxlength="220" class="form-control mt-2 mb-2" rows="1" style="resize: vertical;" name="definition_en" >{{ translate.definition_en }}</textarea>
                     </div>
                 </div>
                 <div class="row mb-2 d-flex align-items-center">
-                    <label for="definition_ru" class="col-sm-2 col-form-label text-end">Определение (рус):</label>
+                    <label for="definition_ru" class="col-sm-2 col-form-label text-end d-none d-md-inline">Определение (рус):</label>
+                    <label for="definition_ru" class="col-sm-2 col-form-label text-end d-inline d-md-none">Опр(рус):</label>
                     <div class="col-10">
                         <textarea id="definition_ru" maxlength="220" class="form-control mt-2 mb-2" rows="1" style="resize: vertical;" name="definition_ru" >{{ translate.definition_ru }}</textarea>
                     </div>
@@ -73,7 +79,8 @@
                 </div>
 
                 <div class="row mb-2 d-flex align-items-center">
-                    <label for="subj_id" class="col-sm-2 col-form-label text-end"><strong>Категория перевода:</strong></label>
+                    <label for="subj_id" class="col-sm-2 col-form-label text-end d-none d-md-inline"><strong>Категория перевода:</strong></label>
+                    <label for="subj_id" class="col-sm-2 col-form-label text-end d-inline d-md-none">Категория:</label>
                     <div class="col-10">
                         <select name="subj_id" id="subj_id" class="form-select w-auto" required>
                             <option value="">Выберите категорию</option>
@@ -91,15 +98,17 @@
                     </div>
                 </div>
                 <div class="row mb-2 d-flex align-items-center">
-                    <label for="definition_en" class="col-sm-2 col-form-label text-end">Определение (англ):</label>
+                    <label for="definition_en" class="col-sm-2 col-form-label text-end d-none d-md-inline">Определение (англ):</label>
+                    <label for="definition_en" class="col-sm-2 col-form-label text-end d-inline d-md-none">Опр(анг):</label>
                     <div class="col-10">
-                        <textarea id="definition_en" maxlength="220" class="form-control mt-2 mb-2" rows="1" style="resize: vertical;" name="definition_en" placeholder=""></textarea>
+                        <textarea id="definition_en" maxlength="220" class="form-control mt-2 mb-2" rows="1" style="resize: vertical;" name="definition_en" placeholder="Определение на английском (необязательно)"></textarea>
                     </div>
                 </div>
                 <div class="row mb-2 d-flex align-items-center">
-                    <label for="definition_ru" class="col-sm-2 col-form-label text-end">Определение (рус):</label>
+                    <label for="definition_ru" class="col-sm-2 col-form-label text-end d-none d-md-inline">Определение (рус):</label>
+                    <label for="definition_ru" class="col-sm-2 col-form-label text-end d-inline d-md-none">Опр(рус):</label>
                     <div class="col-10">
-                        <textarea id="definition_ru" maxlength="220" class="form-control mt-2 mb-2" rows="1" style="resize: vertical;" name="definition_ru" placeholder=""></textarea>
+                        <textarea id="definition_ru" maxlength="220" class="form-control mt-2 mb-2" rows="1" style="resize: vertical;" name="definition_ru" placeholder="Определение на русском (необязательно)"></textarea>
                     </div>
                 </div>
                 <hr style="height: 1px; background-color: black; border: none;">
@@ -107,7 +116,8 @@
             
             
         {% endfor %}
-        <button  type="button" class="btn btn-light submit-button" onclick="addField()">➕ Добавить форму для перевода</button>
+        <button  type="button" class="btn btn-light submit-button d-none d-md-inline" onclick="addField()">➕ Добавить форму для перевода</button>
+        <button  type="button" class="btn btn-light submit-button" onclick="addField()">➕ перевод</button>
         </form>
         </div>
 
@@ -125,7 +135,8 @@
         newField.innerHTML = `
                 <button type="button" class="btn btn-light w-40 ms-auto"  onclick="removeField(this)">❌ Удалить</button>
                 <div class="row mb-2 d-flex align-items-center">
-                    <label for="subj_id" class="col-sm-2 col-form-label text-end"><strong>Категория перевода:</strong></label>
+                    <label for="subj_id" class="col-sm-2 col-form-label text-end d-none d-md-inline"><strong>Категория перевода:</strong></label>
+                    <label for="subj_id" class="col-sm-2 col-form-label text-end d-inline d-md-none">Категория:</label>
                     <div class="col-10">
                         <select name="subj_id" id="subj_id" class="form-select w-auto" required>
                             <option value="">Выберите роль</option>
@@ -143,13 +154,15 @@
                     </div>
                 </div>
                 <div class="row mb-2 d-flex align-items-center">
-                    <label for="definition_en" class="col-sm-2 col-form-label text-end">Определение (англ):</label>
+                    <label for="definition_en" class="col-sm-2 col-form-label text-end d-none d-md-inline">Определение (англ):</label>
+                    <label for="definition_en" class="col-sm-2 col-form-label text-end d-inline d-md-none">Опр(анг):</label>
                     <div class="col-10">
                         <textarea id="definition_en" class="form-control mt-2 mb-2" rows="1" style="resize: vertical;" name="definition_en" placeholder=""></textarea>
                     </div>
                 </div>
                 <div class="row mb-2 d-flex align-items-center">
-                    <label for="definition_ru" class="col-sm-2 col-form-label text-end">Определение (рус):</label>
+                    <label for="definition_ru" class="col-sm-2 col-form-label text-end d-none d-md-inline">Определение (рус):</label>
+                    <label for="definition_ru" class="col-sm-2 col-form-label text-end d-inline d-md-none">Опр(рус):</label>
                     <div class="col-10">
                         <textarea id="definition_ru" class="form-control mt-2 mb-2" rows="1" style="resize: vertical;" name="definition_ru" placeholder=""></textarea>
                     </div>
