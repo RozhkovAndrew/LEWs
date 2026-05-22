@@ -16,17 +16,19 @@
                 {%- endfor -%}
             </select>
             <a class="btn btn-primary d-none d-md-inline" onclick="clear_filter()" role="button">Сбросить фильтр</a>
-            <a class="btn btn-primary d-inline d-md-none" onclick="clear_filter()" role="button">❌ фильтр</a>
+            
             </div>
         
         <div class="d-flex gap-2">
             <a class="btn btn-primary w-auto d-none d-md-inline" href="{{ url_for('add_word') }}" role="button">Добавить слово</a>
-            <a class="btn btn-primary w-auto d-inline d-md-none" href="{{ url_for('add_word') }}" role="button">➕ слово</a>
+            <a class="btn btn-outline-primary w-auto d-inline d-md-none" href="{{ url_for('add_word') }}" role="button">➕ слово</a>
             <a class="btn btn-primary w-auto d-none d-md-inline" href="{{ url_for('add_subj') }}" role="button">Добавить категорию</a>
-            <a class="btn btn-primary w-auto d-inline d-md-none" href="{{ url_for('add_subj') }}" role="button">➕ категория</a>
+            <a class="btn btn-outline-primary w-auto d-inline d-md-none" href="{{ url_for('add_subj') }}" role="button">➕ категория</a>
         </div>
         </div>
-        <input type="text" id="filterInput" class="form-control mb-3" placeholder="Введите текст для поиска...">
+        <input type="text" id="filterInput" class="form-control d-none d-md-inline mb-3" placeholder="Введите текст для поиска...">
+        <input type="text" id="filterInput" class="form-control d-inline d-md-none mb-3" style="width: 76%;" placeholder="Введите текст для поиска...">
+        <a class="btn btn-outline-primary d-inline d-md-none" onclick="clear_filter()" role="button">❌ фильтр</a>
     </div>
     <p id="noResults" class="text-muted mt-3" style="display: none;">Совпадений не найдено</p>
 
