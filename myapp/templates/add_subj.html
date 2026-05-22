@@ -21,8 +21,8 @@
                 <button type="submit" class="btn btn-outline-primary d-inline d-md-none" name="action" value="delete">➖ категория</button>
                 </div>
                 <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary d-none d-md-inline""  onclick="">Очистить форму</button>
-                <button type="submit" class="btn btn-outline-primary d-inline d-md-none"  onclick="">♻️ форму</button>
+                <button class="btn btn-primary d-none d-md-inline" onclick="clear_filter()">Очистить форму</button>
+                <button class="btn btn-outline-primary d-inline d-md-none" onclick="clear_filter()">♻️ форму</button>
                 <a href="{{ url_for('words') }}" class="btn btn-primary d-none d-md-inline">К словарю</a>
                 <a href="{{ url_for('words') }}" class="btn btn-outline-primary d-inline d-md-none">К словарю</a>
                 </div>
