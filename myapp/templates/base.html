@@ -26,6 +26,18 @@
             padding: 15px;
             z-index: 1000;
         }
+
+        .card-body {
+        min-height: 100px; 
+        font-family: monospace;
+        font-size: 15px !important;
+        background-color: rgb(248, 241, 248);
+        }
+        .hr {
+            height: 1px;
+            background-color: black;
+            border: none;
+        }
         
         .content {
             padding: 20px;
@@ -38,15 +50,19 @@
             touch-action: manipulation;
         }
         
-        /* Увеличение отступов на мобильных */
-        @media (max-width: 768px) {
-            .container {
+        /* Увеличение отступов на мобильных - max-width: 768px */
+        @media (min-width: 768px) {
+            .container { 
                 padding-left: 15px;
                 padding-right: 15px;
             }
             
             .card-body {
+                min-height: 400px;
+                font-size: 18px !important;
                 padding: 1rem;
+                font-family: monospace;
+                background-color: rgb(248, 241, 248);
             }
         }
 

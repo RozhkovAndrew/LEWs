@@ -55,16 +55,17 @@
                 <div class="tab-pane" id="{{ word.e_word }}" role="tabpanel" aria-labelledby="list-{{ word.e_word }}-list">
                     <div class="card">
                         <div class="card-header text-bg-light">
-                            <h3>{{ word.e_word }}</h3>   
+                            <h4>{{ word.e_word }}</h4>   
                         </div>
-                        <div class="card-body card-body-compact" style="min-height: 400px; font-family: monospace; background-color: rgb(248, 241, 248);">
+                        <div class="card-body card-body-compact">
                             {%- for i in range(word.subject_list|length) -%}
+                        <div class="subj">
                             <div><mark><i>{{ word.subject_list[i] }}</i></mark></div><div><strong><big>{{ word.translate_list[i]}}</big></strong></div>
-
                             {%- if word.definition_en_list[i] -%}
-                            <div><em><u>Определение (англ)</u>: </em>{{ word.definition_en_list[i]}}</div><hr style="width:30%; text-align:left; border:none; border-top:1px dashed black;"><div><em><u>Определение</u>: </em>{{ word.definition_ru_list[i]}}</div>
+                            <div><em><u>Определение (англ)</u>: </em>{{ word.definition_en_list[i]}}</div><hr style="width:30%; text-align:left; border-top:1px dashed black;"><div><em><u>Определение</u>: </em>{{ word.definition_ru_list[i]}}</div>
                             {%- endif -%}
-                            <hr style="height: 1px; background-color: black; border: none;">
+                            <hr>
+                        </div>
                             {%- endfor -%}
                         </div>
                         <!-- Кнопки управления в карточке -->
