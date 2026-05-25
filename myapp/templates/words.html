@@ -69,8 +69,10 @@
                             {%- endfor -%}
                         </div>
                         <!-- Кнопки управления в карточке -->
-                         <div class="d-flex justify-content-center mt-0" style="background-color: rgb(248, 241, 248);">   
-                            <a href="{{ url_for('add_word', id=word.id) }}" class="btn btn-success">Корректировка слова</a>
+                         <div class="d-flex justify-content-between mt-0" style="background-color: rgb(248, 241, 248);">   
+                            <a href="{{ url_for('add_word', id=word.id) }}" class="btn btn-success d-none d-md-inline w-50">Корректировка слова</a>
+                            <a href="{{ url_for('add_word', id=word.id) }}" class="btn btn-success d-inline d-md-none w-50">Корректировка</a>
+                            <a class="btn btn-primary w-50" tag="button" onclick="return_translate(this.closest('.card'))" role="button" hidden>Вернуть перевод</a>
                         </div>
                     </div>
                 </div>
@@ -234,11 +236,11 @@
         input.addEventListener('input', filterList);
     </script>
 
-    <!-- Скрипт на поиск выбранной категории в списке  -->
+    <!-- Скрипт на поиск выбранной категории в списке и фильтрация переводов  -->
     <script>
         const s_input = document.getElementById('subj_id');
-        // const s_items = Array.from(list.getElementsByTagName('span'));
         const list_subj = document.querySelectorAll('.subj-obj');
+        const list_button_hiden = document.querySelectorAll('[tag="button"]');
         
         function s_filterList() {
         const s_searchText = s_input.value.toLowerCase().trim();
@@ -262,6 +264,13 @@
                     item.style.display = 'none';
                 }
             });
+            list_button_hiden.forEach (item => {
+                const card = item.closest('.card');
+                const num_tr = card.querySelectorAll('.subj-obj').length;
+                if (num_tr !=1) {
+                    item.hidden = false;
+                }     
+            });
         } else {
             items.forEach(item => {
                     item.style.display = '';
@@ -269,6 +278,9 @@
             list_subj.forEach (item => {
                     item.style.display = '';
                     hasVisible = true;});
+            list_button_hiden.forEach (item => {
+                    item.hidden = true;
+            });
         }     
             noResults.style.display = hasVisible ? 'none' : 'block';
             activateTabByOriginalIndex(0);
@@ -288,7 +300,20 @@
             list_subj.forEach (item => {
                     item.style.display = '';
                     hasVisible = true;});
+            list_button_hiden.forEach (item => {
+                item.hidden = true;
+            });
         }
+
+        function return_translate(this_card) {
+            const card_translates = this_card.querySelectorAll('.subj-obj');
+            const button_return_translate = this_card.querySelector('[tag="button"]');
+            card_translates.forEach (item => {
+                    item.style.display = '';
+                    hasVisible = true;});
+            button_return_translate.hidden = true;
+        }
+
     </script>
 
 {% endblock %}
