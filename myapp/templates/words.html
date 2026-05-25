@@ -59,7 +59,7 @@
                         </div>
                         <div class="card-body card-body-compact">
                             {%- for i in range(word.subject_list|length) -%}
-                        <div class="subj">
+                        <div class="subj-obj" data-obj="{{ word.subject_list_id[i] }}">
                             <div><mark><i>{{ word.subject_list[i] }}</i></mark></div><div><strong><big>{{ word.translate_list[i]}}</big></strong></div>
                             {%- if word.definition_en_list[i] -%}
                             <div><em><u>Определение (англ)</u>: </em>{{ word.definition_en_list[i]}}</div><hr style="width:30%; text-align:left; border-top:1px dashed black;"><div><em><u>Определение</u>: </em>{{ word.definition_ru_list[i]}}</div>
@@ -237,7 +237,8 @@
     <!-- Скрипт на поиск выбранной категории в списке  -->
     <script>
         const s_input = document.getElementById('subj_id');
-        const s_items = Array.from(list.getElementsByTagName('span'));
+        // const s_items = Array.from(list.getElementsByTagName('span'));
+        const list_subj = document.querySelectorAll('.subj-obj');
         
         function s_filterList() {
         const s_searchText = s_input.value.toLowerCase().trim();
@@ -252,8 +253,20 @@
                     item.style.display = 'none';
                 }
             });
+            list_subj.forEach (item => {
+                const text = item.getAttribute('data-obj').toLowerCase();
+                if (text.includes(s_searchText)) {
+                    item.style.display = '';
+                    hasVisible = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         } else {
             items.forEach(item => {
+                    item.style.display = '';
+                    hasVisible = true;});
+            list_subj.forEach (item => {
                     item.style.display = '';
                     hasVisible = true;});
         }     
@@ -270,6 +283,9 @@
             document.getElementById('filterInput').value=""
             document.getElementById('subj_id').value="0"
             items.forEach(item => {
+                    item.style.display = '';
+                    hasVisible = true;});
+            list_subj.forEach (item => {
                     item.style.display = '';
                     hasVisible = true;});
         }
