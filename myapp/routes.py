@@ -77,7 +77,7 @@ def words():
     #subjects = SubjectArea.query.all()
     subjects = db.session.query(SubjectArea.id, SubjectArea.subject_name, func.count(Translation.subject_id).label('count_translate')).join(Translation, Translation.subject_id == SubjectArea.id).group_by(SubjectArea.id, SubjectArea.subject_name).all()
 
-    words=db.session.query(EWord).all()
+    words=db.session.query(EWord).order_by(EWord.e_word).all()
     id_word = session.get('id_word')
 
     for word in words:
