@@ -145,7 +145,7 @@ def add_word(id):
     if request.method == 'POST':
         action = request.form.get('action')
         # Получаем данные из формы
-        e_word = request.form.get('e_word')  #1.2
+        e_word = request.form.get('e_word').lstrip()  #1.2
         id_word = 0 if request.form.get('id_word')=="" else int(request.form.get('id_word'))
         exist_word = db.session.query(EWord).filter_by(e_word=e_word).first()
             #Может быть по несколько значений
