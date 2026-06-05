@@ -29,10 +29,10 @@
         }
 
         .card-body {
-        min-height: 100px; 
-        font-family: monospace;
-        font-size: 15px !important;
-        background-color: rgb(248, 241, 248);
+            min-height: 100px; 
+            font-family: monospace;
+            font-size: 15px !important;
+            background-color: rgb(248, 241, 248);
         }
         .hr {
             height: 1px;
@@ -42,6 +42,9 @@
         
         .content {
             padding: 20px;
+        }
+        .custom-sticky {
+            padding: 0px;
         }
         /* Улучшение touch-области для мобильных */
         button, 
@@ -69,6 +72,15 @@
                 font-family: monospace;
                 background-color: rgb(248, 241, 248);
             }
+            .custom-sticky {
+                position: fixed;
+                width: 45%;
+                left: 38%;
+            }
+            .navbar {
+                position: sticky;
+            }
+            
         }
 
     </style>

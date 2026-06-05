@@ -3,32 +3,31 @@
 {% block title %}Словарь{% endblock %}
 
 {% block content %}
-
-    <div class="container mt-2">
-        <h1 class="d-none d-md-inline">Словарь</h1>
+    <h1 class="d-none d-md-inline">Словарь</h1>
+    <div class="container sticky-top">
+        
         <!-- Элементы управления и фильтры -->
         <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex gap-2">
-            <select class="form-select w-auto" name="subj_id" id="subj_id">
-            <option value="0">Все категории</option>
-                {%- for subject in subjects -%}
-                    <option value="{{ subject.id}}">{{ subject.subject_name }}</option>
-                {%- endfor -%}
-            </select>
-            <a class="btn btn-primary d-none d-md-inline" onclick="clear_filter()" role="button">Сбросить фильтр</a>
-            
+            <div class="d-flex gap-2 mb-1">
+                <select class="form-select w-auto" name="subj_id" id="subj_id">
+                <option value="0">Все категории</option>
+                    {%- for subject in subjects -%}
+                        <option value="{{ subject.id}}">{{ subject.subject_name }}</option>
+                    {%- endfor -%}
+                </select>
+                <a class="btn btn-primary d-none d-md-inline" onclick="clear_filter()" role="button">Сбросить фильтр</a> 
             </div>
         
         <div class="d-flex gap-2">
             <a class="btn btn-primary w-auto d-none d-md-inline" href="{{ url_for('add_word') }}" role="button">Добавить слово</a>
-            <a class="btn btn-outline-primary w-auto d-inline d-md-none" href="{{ url_for('add_word') }}" role="button">➕ слово</a>
+            <a class="btn btn-outline-primary w-auto d-inline d-md-none mb-1" href="{{ url_for('add_word') }}" role="button">➕ слово</a>
             <a class="btn btn-primary w-auto d-none d-md-inline" href="{{ url_for('add_subj') }}" role="button">Добавить категорию</a>
-            <a class="btn btn-outline-primary w-auto d-inline d-md-none" href="{{ url_for('add_subj') }}" role="button">➕ категория</a>
+            <a class="btn btn-outline-primary w-auto d-inline d-md-none mb-1" href="{{ url_for('add_subj') }}" role="button">➕ категория</a>
         </div>
         </div>
-        <input type="text" id="filterInput" class="form-control d-none d-md-inline mb-3" placeholder="Введите текст для поиска...">
-        <input type="text" id="filterInput" class="form-control d-inline d-md-none mb-3" style="width: 76%;" placeholder="Введите текст для поиска...">
-        <a class="btn btn-outline-primary d-inline d-md-none" onclick="clear_filter()" role="button">❌ фильтр</a>
+        <input type="text" id="filterInput" class="form-control d-none d-md-inline mb-1" placeholder="Введите текст для поиска...">
+        <!-- <input type="text" id="filterInput" class="form-control d-inline d-md-none mb-3" style="width: 76%;" placeholder="Введите текст для поиска...">
+        <a class="btn btn-outline-primary d-inline d-md-none" onclick="clear_filter()" role="button">❌ фильтр</a> -->
     </div>
     <p id="noResults" class="text-muted mt-3" style="display: none;">Совпадений не найдено</p>
 
@@ -44,7 +43,7 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="col-8">
+        <div class="col-8 custom-sticky">
             <div class="d-flex justify-content-between mt-0">
                 <button id="prevTab" class="btn btn-outline-primary">≺ Предыдущее</button>
                 <button id="nextTab" class="btn btn-outline-primary">Следующее ≻</button>
@@ -114,6 +113,11 @@
             }
         });
     });
+
+    // Функция для скачка наверх страницы
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
     // 4. Кнопки prev/next
     const prevBtn = document.getElementById('prevTab');
@@ -231,6 +235,7 @@
             });
             noResults.style.display = hasVisible ? 'none' : 'block';
             activateTabByOriginalIndex(0);
+            scrollToTop();
         }
 
         input.addEventListener('input', filterList);
@@ -284,6 +289,7 @@
         }     
             noResults.style.display = hasVisible ? 'none' : 'block';
             activateTabByOriginalIndex(0);
+            scrollToTop();
         }
 
         s_input.addEventListener('change', s_filterList);
@@ -303,6 +309,7 @@
             list_button_hiden.forEach (item => {
                 item.hidden = true;
             });
+            scrollToTop();
         }
 
         function return_translate(this_card) {
