@@ -86,7 +86,7 @@ def words():
         subject_list_id=[]
         definition_en_list=[]
         definition_ru_list=[]
-        translate_words = db.session.query(Translation.id, Translation.translate_word,Translation.definition_en, Translation.definition_ru, Translation.subject_id, SubjectArea.subject_name).join(Translation, Translation.subject_id == SubjectArea.id).filter_by(e_word_id=word.id)
+        translate_words = db.session.query(Translation.id, Translation.translate_word,Translation.definition_en, Translation.definition_ru, Translation.subject_id, SubjectArea.subject_name).join(Translation, Translation.subject_id == SubjectArea.id).filter_by(e_word_id=word.id).order_by(Translation.subject_id)
         for translate_word in translate_words:
             subject_list_id.append(translate_word.subject_id)
             subject_list.append(translate_word.subject_name)
